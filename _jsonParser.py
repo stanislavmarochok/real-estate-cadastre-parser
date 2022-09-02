@@ -1,4 +1,4 @@
-class Parser:
+class JsonParser:
     def __init__(self, _json):
         self.parent_level_for_mode_0 = 1
         self.parent_level_for_mode_1 = 1

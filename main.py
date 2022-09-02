@@ -1,7 +1,8 @@
 import xmltojson
 import json
 
-from _parser import Parser
+from _jsonParser import JsonParser
+from _argParser import ArgParser
 
 
 def getFullJsonFromFile(filename):
@@ -25,22 +26,45 @@ def getFullJsonFromFile(filename):
             print(e)
 
 
-def saveJsonToFile(filename, _json):
-    with open(filename, "w") as file:
-        json.dump(_json, file)
+def saveResultsToFile(outputFileFullName, results):
+    with open(outputFileFullName, "w") as file:
+        json.dump(results, file)
+
+
+def getAllFilenames(fullPathToDirectory):
+    # get all files in directory "fullPathToDirectory" here
+    return ["filename1", "filename.2"]
 
 
 def main():
-    filename = 'test'
 
-    fullJson = getFullJsonFromFile(filename=f'{filename}.html')
-    # saveJsonToFile(filename=f'{filename}.json', _json=fullJson)
+    # parse arguments here
 
-    parser = Parser(fullJson)
-    parser.runParser()
+    args = ArgParser.getArgs()
 
-    results = parser.results
-    print(results)
+    path = args.path
+
+    filename = f'{path}/test' # replace with "parser.filename"
+    filenames = [filename]
+
+    if args.all: # replace with "parser.all"
+        filenames = getAllFilenames(path)
+
+    allResults = []
+
+    for _filename in filenames:
+        fullJson = getFullJsonFromFile(filename=f'{_filename}')
+        # saveJsonToFile(filename=f'{filename}.json', _json=fullJson)
+
+        parser = JsonParser(fullJson)
+        parser.runParser()
+
+        results = parser.results
+        print(results)
+        # save results to common excel
+        allResults = allResults + results
+
+    saveResultsToFile(args.output, allResults)
 
 
 if __name__ == "__main__":
