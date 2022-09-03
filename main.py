@@ -28,7 +28,7 @@ def getFullJsonFromFile(filename):
 
 
 def saveDataframeToFile(output_file_full_name, results_dataframe: pd.DataFrame):
-    results_dataframe.to_csv(f'{output_file_full_name}.csv')
+    results_dataframe.to_csv(f'{output_file_full_name}')
 
 
 def getAllFilenames(full_path_to_directory):
@@ -56,7 +56,7 @@ def main():
         print(f'Processing file {_filename}')
         try:
             full_json = getFullJsonFromFile(filename=f'{_filename}')
-        except Exception:
+        except Exception as e:
             continue
         # saveJsonToFile(filename=f'{filename}.json', _json=full_json)
 
