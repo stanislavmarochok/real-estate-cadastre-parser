@@ -42,21 +42,18 @@ def getAllFilenames(full_path_to_directory):
 
 
 def main():
-    # parse arguments here
-
     args = ArgParser.getArgs()
-
     path = args.path
-
-    filename = f'{path}/test.html'  # replace with "parser.filename"
-    filenames = [filename]
 
     if args.all:  # replace with "parser.all"
         filenames = getAllFilenames(path)
+    else:
+        filenames = [args.path]
 
     all_results_dataframe = None
 
     for _filename in filenames:
+        print(f'Processing file {_filename}')
         try:
             full_json = getFullJsonFromFile(filename=f'{_filename}')
         except Exception:
