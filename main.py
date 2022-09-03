@@ -1,5 +1,6 @@
 import xmltojson
 import json
+import pandas as pd
 
 from _jsonParser import JsonParser
 from _argParser import ArgParser
@@ -14,57 +15,65 @@ def getFullJsonFromFile(filename):
             from bs4 import BeautifulSoup
 
             soup = BeautifulSoup(html_str)
-            prettySoup = soup.prettify()
+            pretty_soup = soup.prettify()
 
-            json_ = xmltojson.parse(prettySoup)
-            loadedJson = json.loads(json_)
+            json_ = xmltojson.parse(pretty_soup)
+            loaded_json = json.loads(json_)
 
-            return loadedJson
+            return loaded_json
 
         except UnicodeDecodeError as e:
             print('error')
             print(e)
 
 
-def saveResultsToFile(outputFileFullName, results):
-    with open(outputFileFullName, "w") as file:
-        json.dump(results, file)
+def saveDataframeToFile(output_file_full_name, results_dataframe: pd.DataFrame):
+    results_dataframe.to_csv(f'{output_file_full_name}.csv')
 
 
-def getAllFilenames(fullPathToDirectory):
+def getAllFilenames(full_path_to_directory):
     # get all files in directory "fullPathToDirectory" here
-    return ["filename1", "filename.2"]
+
+    import glob
+
+    path = f'{full_path_to_directory}/*.html'
+    files = glob.glob(path)
+    return files
 
 
 def main():
-
     # parse arguments here
 
     args = ArgParser.getArgs()
 
     path = args.path
 
-    filename = f'{path}/test' # replace with "parser.filename"
+    filename = f'{path}/test.html'  # replace with "parser.filename"
     filenames = [filename]
 
-    if args.all: # replace with "parser.all"
+    if args.all:  # replace with "parser.all"
         filenames = getAllFilenames(path)
 
-    allResults = []
+    all_results_dataframe = None
 
     for _filename in filenames:
-        fullJson = getFullJsonFromFile(filename=f'{_filename}')
-        # saveJsonToFile(filename=f'{filename}.json', _json=fullJson)
+        try:
+            full_json = getFullJsonFromFile(filename=f'{_filename}')
+        except Exception:
+            continue
+        # saveJsonToFile(filename=f'{filename}.json', _json=full_json)
 
-        parser = JsonParser(fullJson)
+        parser = JsonParser(full_json)
         parser.runParser()
 
-        results = parser.results
-        print(results)
-        # save results to common excel
-        allResults = allResults + results
+        results_dataframe = parser.results
+        results_dataframe = pd.DataFrame(results_dataframe)
+        # save results_dataframe to common excel
+        if all_results_dataframe is None:
+            all_results_dataframe = results_dataframe
+        all_results_dataframe = pd.concat([all_results_dataframe, results_dataframe], ignore_index=True)
 
-    saveResultsToFile(args.output, allResults)
+    saveDataframeToFile(args.output, all_results_dataframe)
 
 
 if __name__ == "__main__":

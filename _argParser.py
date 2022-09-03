@@ -8,7 +8,7 @@ class ArgParser:
         parser.add_argument('--all', dest='all', action='store_true', default=False, help='Specify this argument if '
                                                                                           'you want to parse all the '
                                                                                           'files in a folder.')
-        parser.add_argument('--path', type=str, dest='path', action='store', default='./', help='Specify full path to '
+        parser.add_argument('--path', type=str, dest='path', action='store', default='.', help='Specify full path to '
                                                                                                 'the file that you '
                                                                                                 'want to process (if '
                                                                                                 'you want to process '

@@ -1,5 +1,7 @@
 .idea/
 LV_BA1_A/
+test_folder/
 __pycache__/
 details.txt
 ve/
+output.csv

@@ -9,7 +9,10 @@ class JsonParser:
 
         self.tempName = None
 
-        self.results = []
+        self.results = ({
+            'Name': [],
+            'Real estate': []
+        })
 
     def runParser(self):
         self.recursively_find_data(self._json)
@@ -24,7 +27,8 @@ class JsonParser:
 
     def checkValue(self, found_value_result, level_of_object):
         if found_value_result is not None and found_value_result['value_found']:
-            if level_of_object == int(found_value_result['level_of_object']) - (self.parent_level_for_mode_0 if self.mode == 0 else self.parent_level_for_mode_1):
+            if level_of_object == int(found_value_result['level_of_object']) - (
+                    self.parent_level_for_mode_0 if self.mode == 0 else self.parent_level_for_mode_1):
                 return 1
             return 0
         return -1
@@ -67,11 +71,8 @@ class JsonParser:
         print(value, '\n\n\n')
 
     def addItemToResults(self, items):
-        newRecord = {
-            'name': items[0],
-            'hypotec': items[1]
-        }
-        self.results.append(newRecord)
+        self.results['Name'].append(items[0])
+        self.results['Real estate'].append(items[1])
 
     def recursively_find_data(self, json_object, level_of_object=0):
         if type(json_object) is str:
